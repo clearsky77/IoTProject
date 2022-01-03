@@ -10,6 +10,12 @@ require('dotenv/config'); // 몽고 디비에서 경로 지정할 때 사용한�
 
 const DHT11 = require("./models/DHT11");
 
+
+// 클라이언트에게 서비스
+app.use(express.static(__dirname+"/public")); // __dirname은 현재 디렉토리를 뜻함
+
+
+
 // 노드 -> 모스키토 서버
 client.on("connect", () => {
   // 접속되면 connect이벤트가 생긴다.
