@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,6 +8,29 @@
     <title>Document</title>
     <script type="text/javascript" src="/socket.io/socket.io.js"></script>
     <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript">
+        var socket = null;
+        var timer = null;
+        $(document).ready(function () {
+            socket = io.connect(); // 3000번 포트에 접속된다.
+            // Node.js보낸 데이터를 수신하는 부분
+            socket.on("socket_evt_mqtt", function (data) { //on은 이벤트 생기면 func 실행.
+                var dataJson = JSON.parse(data); //
+                $(".mqttlist").html( // 받은 온습도를 화면에 출력한다
+                    "<li>" + dataJson.tmp + "(" + dataJson.hum + "%)" + "</li>"
+                );
+            });
+            if (timer == null) {
+                timer = window.setInterval("timer1()", 5000); // timer1 함수를 5초에 한 번씩 호출
+            }
+        });
+
+        function timer1() { // node.js로 데이터를 요청한다
+            socket.emit("socket_evt_mqtt", JSON.stringify({})); //
+            console.log("---------");
+        }
+
+    </scriptt>
 </head>
 <body>
     <h2>DHT11(온도:습도) 모니터링 화면</h2>
