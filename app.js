@@ -9,6 +9,7 @@ const mongoose = require("mongoose");
 require('dotenv/config'); // 몽고 디비에서 경로 지정할 때 사용한다.
 
 const DHT11 = require("./models/DHT11");
+const { Socket } = require("socket.io");
 
 
 // 클라이언트에게 서비스
@@ -62,6 +63,18 @@ client.on("message", (topic, message) => {
 // Web Server 만들기. express 모듈 사용.
 app.set("port", "3000");
 var server = http.createServer(app); // express 모듈(app)을 사용하여 서버 제작
+
+// Socket 만들기.(html과 통신하기)
+var io=require("socket.io")(server);
+io.on("connection",(socket)=>{ // on은 socket에 이벤트 등록할 때 쓴다.
+    socket.on("socket_evt_mqtt",(data)=>{ //html에서 socket_evt_mqtt라는 이벤트가 넘어오면
+        DHT11.find({}).sort({_id : -1}).limit(1).then(obj=>{ // 내림차순 후 1개의 데이터. then(받으면)처리 기술.
+            socket.emit("socket_evt_mqtt",JSON.stringify(obj[0]));
+        }); 
+    })
+}) 
+
+
 server.listen(3000, (err) => {
   // 3000번 포트를 여는데 에러가 생기면 처리
   if (err) {
