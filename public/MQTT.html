@@ -5,8 +5,22 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
 </head>
 <body>
     <h2>DHT11(온도:습도) 모니터링 화면</h2>
+    <div id="msg">
+        <div id="mqtt_logs">
+        <ul class="mqttlist"></ul>
+        </div>
+        <h2>socket 통신 방식(LED제어)</h2>
+        <button onclick="ledOnOff(1)">LED_ON</button>
+        <button onclick="ledOnOff(2)">LED_OFF</button>
+        <h2>RESTfull Service 통신 방식(LED제어)</h2>
+        <button onclick="ajaxledOnOff(1)">LED_ON</button>
+        <button onclick="ajaxledOnOff(2)">LED_OFF</button>
+        <div id="led">LED STATUS</div>
+        </div>
 </body>
 </html>
