@@ -30,13 +30,19 @@
             console.log("---------");
         }
 
+        function ledOnOff(value) {
+            // {"led":1}, {"led":2}
+            socket.emit("socket_evt_led", JSON.stringify({ led: Number(value) }));
+        }
+
     </script>
 </head>
+
 <body>
     <h2>DHT11(온도:습도) 모니터링 화면</h2>
     <div id="msg">
         <div id="mqtt_logs">
-        <ul class="mqttlist"></ul>
+            <ul class="mqttlist"></ul>
         </div>
         <h2>socket 통신 방식(LED제어)</h2>
         <button onclick="ledOnOff(1)">LED_ON</button>
@@ -45,6 +51,7 @@
         <button onclick="ajaxledOnOff(1)">LED_ON</button>
         <button onclick="ajaxledOnOff(2)">LED_OFF</button>
         <div id="led">LED STATUS</div>
-        </div>
+    </div>
 </body>
+
 </html>

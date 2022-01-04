@@ -67,11 +67,19 @@ var server = http.createServer(app); // express 모듈(app)을 사용하여 서�
 // Socket 만들기.(html과 통신하기)
 var io=require("socket.io")(server);
 io.on("connection",(socket)=>{ // on은 socket에 이벤트 등록할 때 쓴다.
+    
+    //웹에서 소켓을 이용하여 DHT11 센서 모니터링
     socket.on("socket_evt_mqtt",(data)=>{ //html에서 socket_evt_mqtt라는 이벤트가 넘어오면
         DHT11.find({}).sort({_id : -1}).limit(1).then(obj=>{ // 내림차순 후 1개의 데이터. then(받으면)처리 기술.
             socket.emit("socket_evt_mqtt",JSON.stringify(obj[0]));
         }); 
     })
+
+    //웹에서 소켓을 이용하여 LED ON/OFF 제어하기
+    socket.on("socket_evt_led", (data)=> {
+      var obj = JSON.parse(data);
+      client.publish("led", obj.led + ""); // led 토픽으로 MQTT에 보내기. "1", "2"
+    });
 }) 
 
 
