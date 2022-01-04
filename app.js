@@ -11,9 +11,15 @@ require('dotenv/config'); // 몽고 디비에서 경로 지정할 때 사용한�
 const DHT11 = require("./models/DHT11");
 const { Socket } = require("socket.io");
 
+const bodyParser = require("body-parser"); // body 내용을 가져오기 위해
+const deviceRouter = require("./routes/devices");
 
-// 클라이언트에게 서비스
+
+
 app.use(express.static(__dirname+"/public")); // __dirname은 현재 디렉토리를 뜻함
+app.use(bodyParser.json()); // client에서 오는 json을 사용할 수 있도록
+app.use(bodyParser.urlencoded({extended:false})); // url에 들어오는 것은 parser를 꼭 통과하도록
+app.use("/devices",deviceRouter); // 주소에 따른 js를 보여줌 /devices라는 요청이 오면 deviceRouter로 연결
 
 
 
@@ -38,9 +44,7 @@ client.on("message", (topic, message) => {
 
   var obj = JSON.parse(message); // json형태로 파싱
 
-  obj.created_at = new Date(
-    Date.UTC(year, month, today, hours, minutes, seconds)
-  ); // 오브젝트에 날짜를 추가해준다.
+  obj.created_at = new Date( Date.UTC(year, month, today, hours, minutes, seconds) ); // 오브젝트에 날짜 추가
 
   console.log(obj);
 

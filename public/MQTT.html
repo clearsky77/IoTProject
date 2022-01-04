@@ -30,9 +30,29 @@
             console.log("---------");
         }
 
+        // LED On/Off (socket 방식)
         function ledOnOff(value) {
             // {"led":1}, {"led":2}
             socket.emit("socket_evt_led", JSON.stringify({ led: Number(value) }));
+        }
+
+        // LED On/Off (restFull 방식)
+        function ajaxledOnOff(value) {
+            if (value == "1") var value = "on";
+            else if (value == "2") var value = "off";
+            $.ajax({
+                url: "http://172.30.1.50:3000/devices/led",
+                type: "post",
+                data: { "flag": value }, // flag=on, flag=off
+                success: ledStatus, // 성공하면 success가 가동된다. ledStatus함수가 실행되도록 한다.
+                error: function () {
+                    alert("error");
+                },
+            });
+        }
+
+        function ledStatus(obj) { // devices.js에서 반환되는 값이 obj변수로 전달된다.
+            $("#led").html("<font color='red'>" + obj.led + "</font> 되었습니다.");
         }
 
     </script>
